@@ -1,7 +1,6 @@
 (function createSoundEngine(globalScope) {
   const SOUND_LEVELS = Object.freeze({
     shake: 1,
-    shakeBoost: 0.45,
     stick: 0.28,
     paper: 0.5
   });
@@ -40,15 +39,8 @@
     function start(timing) {
       stop();
       safePlay(audio.shake);
-      safePlay(audio.shakeBoost);
-      schedule(() => {
-        safePlay(audio.shake);
-        safePlay(audio.shakeBoost);
-      }, 260);
-      schedule(() => {
-        safePlay(audio.shake);
-        safePlay(audio.shakeBoost);
-      }, 520);
+      schedule(() => safePlay(audio.shake), 260);
+      schedule(() => safePlay(audio.shake), 520);
       schedule(() => safePlay(audio.stick), timing.shake);
       schedule(() => safePlay(audio.paper), timing.shake + timing.reveal);
     }

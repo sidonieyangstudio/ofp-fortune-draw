@@ -39,7 +39,6 @@ const cancelEdit = document.querySelector("#cancel-edit");
 const restoreDefaults = document.querySelector("#restore-defaults");
 const soundController = createSoundController({
   shake: document.querySelector("#shake-sound"),
-  shakeBoost: document.querySelector("#shake-boost-sound"),
   stick: document.querySelector("#stick-sound"),
   paper: document.querySelector("#paper-sound")
 }, window);
