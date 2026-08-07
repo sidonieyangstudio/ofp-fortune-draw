@@ -266,6 +266,9 @@ h2 { color: #55361f; font-weight: 500; }
 
 .result-label small {
   position: absolute;
+  display: grid;
+  grid-template-columns: max-content;
+  justify-content: center;
   bottom: 26px;
   left: 12px;
   right: 12px;
