@@ -25,6 +25,18 @@
     { text: "相機", bopomofo: "ㄒㄧㄤˋ ㄐㄧ" }
   ];
 
+  const CUSTOM_THEME_STORAGE_KEY = "ofp-draw-theme-custom";
+  const CUSTOM_THEME_DEFAULTS = Object.freeze({
+    name: "自選",
+    eyebrow: "不知道怎麼選的時候",
+    hint: "點一下籤筒，看看會抽到什麼！",
+    resultLine1: "今天就選",
+    resultLine2: "這一個吧！"
+  });
+  const customChoices = Object.freeze(
+    ["1號籤", "2號籤", "3號籤", "4號籤", "5號籤"].map((text) => Object.freeze({ text, bopomofo: "" }))
+  );
+
   const THEMES = Object.freeze({
     boredom: Object.freeze({
       id: "boredom",
@@ -41,6 +53,14 @@
       hint: "點一下籤筒，看看今天畫什麼！",
       resultMessage: Object.freeze(["今天就畫", "這個主題吧！"]),
       choices: Object.freeze(drawingChoices)
+    }),
+    custom: Object.freeze({
+      id: "custom",
+      title: "自選抽籤筒",
+      eyebrow: CUSTOM_THEME_DEFAULTS.eyebrow,
+      hint: CUSTOM_THEME_DEFAULTS.hint,
+      resultMessage: Object.freeze([CUSTOM_THEME_DEFAULTS.resultLine1, CUSTOM_THEME_DEFAULTS.resultLine2]),
+      choices: customChoices
     })
   });
 
@@ -76,6 +96,78 @@
     }
 
     return { ok: true, values: cleaned, message: "" };
+  }
+
+  function validateCustomThemeSettings(values) {
+    if (!values || typeof values !== "object") {
+      return { ok: false, value: null, message: "保存的主題格式不正確。" };
+    }
+
+    const fields = ["name", "eyebrow", "hint", "resultLine1", "resultLine2"];
+    if (fields.some((field) => typeof values[field] !== "string")) {
+      return { ok: false, value: null, message: "保存的主題格式不正確。" };
+    }
+
+    const cleaned = {
+      name: values.name.trim().replace(/抽籤筒$/u, "").trim(),
+      eyebrow: values.eyebrow.trim(),
+      hint: values.hint.trim(),
+      resultLine1: values.resultLine1.trim(),
+      resultLine2: values.resultLine2.trim()
+    };
+
+    const limits = [
+      ["name", 20, "主題名稱"],
+      ["eyebrow", 40, "副標"],
+      ["hint", 40, "提示文字"],
+      ["resultLine1", 20, "籤紙第一行"],
+      ["resultLine2", 20, "籤紙第二行"]
+    ];
+    for (const [field, maxLength, label] of limits) {
+      if (!cleaned[field]) return { ok: false, value: null, message: `${label}不能留白。` };
+      if (cleaned[field].length > maxLength) {
+        return { ok: false, value: null, message: `${label}最多 ${maxLength} 個字。` };
+      }
+    }
+
+    return { ok: true, value: cleaned, message: "" };
+  }
+
+  function buildCustomTheme(settings) {
+    const result = validateCustomThemeSettings(settings);
+    const value = result.ok ? result.value : CUSTOM_THEME_DEFAULTS;
+    return Object.freeze({
+      id: "custom",
+      title: `${value.name}抽籤筒`,
+      eyebrow: value.eyebrow,
+      hint: value.hint,
+      resultMessage: Object.freeze([value.resultLine1, value.resultLine2]),
+      choices: THEMES.custom.choices
+    });
+  }
+
+  function loadCustomThemeSettings(storage) {
+    try {
+      const result = validateCustomThemeSettings(JSON.parse(storage.getItem(CUSTOM_THEME_STORAGE_KEY)));
+      return result.ok ? result.value : CUSTOM_THEME_DEFAULTS;
+    } catch {
+      return CUSTOM_THEME_DEFAULTS;
+    }
+  }
+
+  function saveCustomThemeSettings(storage, settings) {
+    const result = validateCustomThemeSettings(settings);
+    if (!result.ok) throw new TypeError(result.message);
+    storage.setItem(CUSTOM_THEME_STORAGE_KEY, JSON.stringify(result.value));
+    return result.value;
+  }
+
+  function hasSavedCustomThemeSettings(storage) {
+    try {
+      return validateCustomThemeSettings(JSON.parse(storage.getItem(CUSTOM_THEME_STORAGE_KEY))).ok;
+    } catch {
+      return false;
+    }
   }
 
   function storageKey(themeId) {
@@ -134,6 +226,12 @@
     DRAW_TIMING,
     THEMES,
     validateChoiceTexts,
+    CUSTOM_THEME_DEFAULTS,
+    validateCustomThemeSettings,
+    buildCustomTheme,
+    loadCustomThemeSettings,
+    saveCustomThemeSettings,
+    hasSavedCustomThemeSettings,
     loadSavedChoices,
     saveChoices,
     resetSavedChoices,

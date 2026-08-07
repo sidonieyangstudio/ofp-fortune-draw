@@ -5,6 +5,11 @@ const {
   saveChoices,
   resetSavedChoices,
   validateChoiceTexts,
+  validateCustomThemeSettings,
+  buildCustomTheme,
+  loadCustomThemeSettings,
+  saveCustomThemeSettings,
+  hasSavedCustomThemeSettings,
   cancelTimers,
   getCenterTranslation,
   DRAW_TIMING
@@ -37,6 +42,16 @@ const addChoice = document.querySelector("#add-choice");
 const saveChoiceButton = document.querySelector("#save-choices");
 const cancelEdit = document.querySelector("#cancel-edit");
 const restoreDefaults = document.querySelector("#restore-defaults");
+const editTheme = document.querySelector("#edit-theme");
+const customThemePanel = document.querySelector("#custom-theme-panel");
+const customThemeMessage = document.querySelector("#custom-theme-message");
+const customThemeName = document.querySelector("#custom-theme-name");
+const customThemeEyebrow = document.querySelector("#custom-theme-eyebrow");
+const customThemeHint = document.querySelector("#custom-theme-hint");
+const customResultLine1 = document.querySelector("#custom-result-line-1");
+const customResultLine2 = document.querySelector("#custom-result-line-2");
+const saveCustomThemeButton = document.querySelector("#save-custom-theme");
+const cancelCustomThemeButton = document.querySelector("#cancel-custom-theme");
 const soundController = createSoundController({
   shake: document.querySelector("#shake-sound"),
   stick: document.querySelector("#stick-sound"),
@@ -46,8 +61,14 @@ soundController.prepare();
 
 let activeThemeId = "boredom";
 let activeChoices = loadSavedChoices(window.localStorage, activeThemeId);
+let activeCustomSettings = loadCustomThemeSettings(window.localStorage);
 let editorSnapshot = [];
+let customThemeSnapshot = null;
 const drawTimers = [];
+
+function currentTheme() {
+  return activeThemeId === "custom" ? buildCustomTheme(activeCustomSettings) : THEMES[activeThemeId];
+}
 
 function renderChoiceList() {
   list.replaceChildren();
@@ -59,13 +80,22 @@ function renderChoiceList() {
   choiceHeading.textContent = `籤筒裡的 ${activeChoices.length} 個項目`;
 }
 
-function renderResultMessage(themeId) {
-  const lines = THEMES[themeId].resultMessage.map((line) => {
+function renderResultMessage(theme) {
+  const lines = theme.resultMessage.map((line) => {
     const span = document.createElement("span");
     span.textContent = line;
     return span;
   });
   resultMessage.replaceChildren(...lines);
+}
+
+function renderThemeContent() {
+  const theme = currentTheme();
+  pageTitle.textContent = theme.title;
+  eyebrow.textContent = theme.eyebrow;
+  hint.textContent = theme.hint;
+  renderResultMessage(theme);
+  document.title = `${theme.title}｜歐的樂星球`;
 }
 
 function resetDrawState() {
@@ -151,7 +181,7 @@ function closeEditor() {
 
 function openEditor() {
   editorSnapshot = activeChoices.slice();
-  editorTitle.textContent = `編輯${activeThemeId === "boredom" ? "無聊" : "畫畫"}項目`;
+  editorTitle.textContent = `編輯${currentTheme().title.replace(/抽籤筒$/u, "")}項目`;
   renderEditorRows(editorSnapshot);
   panel.hidden = true;
   showList.setAttribute("aria-expanded", "false");
@@ -162,8 +192,78 @@ function openEditor() {
   showEditorMessage("");
 }
 
+function readCustomThemeValues() {
+  return {
+    name: customThemeName.value,
+    eyebrow: customThemeEyebrow.value,
+    hint: customThemeHint.value,
+    resultLine1: customResultLine1.value,
+    resultLine2: customResultLine2.value
+  };
+}
+
+function fillCustomThemeValues(values) {
+  customThemeName.value = values.name;
+  customThemeEyebrow.value = values.eyebrow;
+  customThemeHint.value = values.hint;
+  customResultLine1.value = values.resultLine1;
+  customResultLine2.value = values.resultLine2;
+}
+
+function showCustomThemeMessage(message, isSuccess = false) {
+  customThemeMessage.textContent = message;
+  customThemeMessage.classList.toggle("is-success", isSuccess);
+}
+
+function customThemeIsDirty() {
+  return !customThemePanel.hidden
+    && JSON.stringify(readCustomThemeValues()) !== JSON.stringify(customThemeSnapshot);
+}
+
+function closeCustomThemeEditor() {
+  customThemePanel.hidden = true;
+  editTheme.setAttribute("aria-expanded", "false");
+  editTheme.textContent = "設定主題";
+  showCustomThemeMessage("");
+}
+
+function openCustomThemeEditor() {
+  customThemeSnapshot = { ...activeCustomSettings };
+  fillCustomThemeValues(customThemeSnapshot);
+  closeEditor();
+  panel.hidden = true;
+  showList.setAttribute("aria-expanded", "false");
+  showList.textContent = "看看項目";
+  customThemePanel.hidden = false;
+  editTheme.setAttribute("aria-expanded", "true");
+  editTheme.textContent = "收起設定";
+  showCustomThemeMessage("");
+}
+
 function canLeaveEditor() {
-  return !editorIsDirty() || window.confirm("尚未儲存的修改會消失，要繼續嗎？");
+  return (!editorIsDirty() && !customThemeIsDirty())
+    || window.confirm("尚未儲存的修改會消失，要繼續嗎？");
+}
+
+function saveCustomThemeEditor() {
+  const result = validateCustomThemeSettings(readCustomThemeValues());
+  if (!result.ok) {
+    showCustomThemeMessage(result.message);
+    return;
+  }
+
+  try {
+    activeCustomSettings = saveCustomThemeSettings(window.localStorage, result.value);
+  } catch {
+    showCustomThemeMessage("這台裝置暫時無法保存，請稍後再試。");
+    return;
+  }
+
+  customThemeSnapshot = { ...activeCustomSettings };
+  cancelDrawTimers();
+  resetDrawState();
+  renderThemeContent();
+  closeCustomThemeEditor();
 }
 
 function saveEditor() {
@@ -224,16 +324,16 @@ function setActiveTheme(themeId) {
   if (!canLeaveEditor()) return;
 
   closeEditor();
+  closeCustomThemeEditor();
   cancelDrawTimers();
 
+  const shouldOpenCustomSettings = themeId === "custom"
+    && !hasSavedCustomThemeSettings(window.localStorage);
   activeThemeId = themeId;
   activeChoices = loadSavedChoices(window.localStorage, themeId);
-  const theme = THEMES[themeId];
-  pageTitle.textContent = theme.title;
-  eyebrow.textContent = theme.eyebrow;
-  hint.textContent = theme.hint;
-  renderResultMessage(themeId);
-  document.title = `${theme.title}｜歐的樂星球`;
+  if (themeId === "custom") activeCustomSettings = loadCustomThemeSettings(window.localStorage);
+  editTheme.hidden = themeId !== "custom";
+  renderThemeContent();
 
   themeButtons.forEach((button) => {
     const isActive = button.dataset.theme === themeId;
@@ -243,6 +343,7 @@ function setActiveTheme(themeId) {
 
   renderChoiceList();
   resetDrawState();
+  if (shouldOpenCustomSettings) openCustomThemeEditor();
 }
 
 function draw() {
@@ -250,6 +351,7 @@ function draw() {
   if (!canLeaveEditor()) return;
 
   closeEditor();
+  closeCustomThemeEditor();
 
   drawButton.disabled = true;
   cancelTimers(drawTimers, window.clearTimeout);
@@ -291,6 +393,7 @@ drawAgain.addEventListener("click", draw);
 showList.addEventListener("click", () => {
   if (!canLeaveEditor()) return;
   closeEditor();
+  closeCustomThemeEditor();
   const isOpening = panel.hidden;
   panel.hidden = !isOpening;
   showList.setAttribute("aria-expanded", String(isOpening));
@@ -303,9 +406,20 @@ themeButtons.forEach((button) => {
 
 editItems.addEventListener("click", () => {
   if (editorPanel.hidden) {
-    openEditor();
+    if (canLeaveEditor()) {
+      closeCustomThemeEditor();
+      openEditor();
+    }
   } else if (canLeaveEditor()) {
     closeEditor();
+  }
+});
+
+editTheme.addEventListener("click", () => {
+  if (customThemePanel.hidden) {
+    if (canLeaveEditor()) openCustomThemeEditor();
+  } else if (canLeaveEditor()) {
+    closeCustomThemeEditor();
   }
 });
 
@@ -323,6 +437,14 @@ addChoice.addEventListener("click", () => {
 saveChoiceButton.addEventListener("click", saveEditor);
 cancelEdit.addEventListener("click", closeEditor);
 restoreDefaults.addEventListener("click", restoreDefaultChoices);
+saveCustomThemeButton.addEventListener("click", saveCustomThemeEditor);
+cancelCustomThemeButton.addEventListener("click", closeCustomThemeEditor);
+
+window.addEventListener("beforeunload", (event) => {
+  if (!editorIsDirty() && !customThemeIsDirty()) return;
+  event.preventDefault();
+  event.returnValue = "";
+});
 
 function reportEmbedHeight() {
   if (window.parent === window) return;
@@ -340,4 +462,4 @@ if ("ResizeObserver" in window) {
 window.addEventListener("load", reportEmbedHeight);
 
 renderChoiceList();
-renderResultMessage(activeThemeId);
+renderThemeContent();
