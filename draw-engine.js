@@ -26,6 +26,8 @@
   ];
 
   const CUSTOM_THEME_STORAGE_KEY = "ofp-draw-theme-custom";
+  const FONT_MODE_STORAGE_KEY = "ofp-draw-font-mode";
+  const FONT_MODE_DEFAULT = "bopomofo";
   const CUSTOM_THEME_DEFAULTS = Object.freeze({
     name: "自選",
     eyebrow: "不知道怎麼選的時候",
@@ -96,6 +98,24 @@
     }
 
     return { ok: true, values: cleaned, message: "" };
+  }
+
+  function normalizeFontMode(value) {
+    return value === "plain" ? "plain" : FONT_MODE_DEFAULT;
+  }
+
+  function loadSavedFontMode(storage) {
+    try {
+      return normalizeFontMode(storage.getItem(FONT_MODE_STORAGE_KEY));
+    } catch {
+      return FONT_MODE_DEFAULT;
+    }
+  }
+
+  function saveFontMode(storage, value) {
+    const mode = normalizeFontMode(value);
+    storage.setItem(FONT_MODE_STORAGE_KEY, mode);
+    return mode;
   }
 
   function validateCustomThemeSettings(values) {
@@ -227,6 +247,10 @@
     THEMES,
     validateChoiceTexts,
     CUSTOM_THEME_DEFAULTS,
+    FONT_MODE_DEFAULT,
+    normalizeFontMode,
+    loadSavedFontMode,
+    saveFontMode,
     validateCustomThemeSettings,
     buildCustomTheme,
     loadCustomThemeSettings,

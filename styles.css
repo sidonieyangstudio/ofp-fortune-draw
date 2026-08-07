@@ -1,8 +1,13 @@
 :root {
   color-scheme: light;
-  font-family: "Bpmf Huninn", "Huninn", "Noto Sans TC", system-ui, sans-serif;
+  --page-font-family: "Bpmf Huninn", "Huninn", "Noto Sans TC", system-ui, sans-serif;
+  font-family: var(--page-font-family);
   color: #5e5453;
   background: #fefbf9;
+}
+
+:root[data-font-mode="plain"] {
+  --page-font-family: "Huninn", "Noto Sans TC", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -26,11 +31,41 @@ button { font: inherit; }
 .theme-switcher {
   display: inline-flex;
   gap: 8px;
-  margin-bottom: 22px;
+  margin-bottom: 10px;
   padding: 5px;
   border: 1px solid #f7dcd1;
   border-radius: 10px;
   background: #fff3ee;
+}
+
+.font-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-bottom: 22px;
+  padding: 5px;
+  border: 1px solid #f7dcd1;
+  border-radius: 10px;
+  color: #55361f;
+  background: #fefbf9;
+}
+
+.font-switcher > span { padding: 0 9px; }
+
+.font-mode-button {
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 9px 14px;
+  color: #55361f;
+  background: transparent;
+  cursor: pointer;
+}
+
+.font-mode-button.is-active {
+  border-color: #da844f;
+  color: #fefbf9;
+  background: #da844f;
 }
 
 .theme-button {
@@ -116,6 +151,10 @@ h2 { color: #55361f; font-weight: 500; }
   border-radius: 6px;
   color: #55361f;
   background: rgba(254, 251, 249, .92);
+}
+
+.hint.is-result-hidden {
+  visibility: hidden;
 }
 
 .tube-button {
@@ -222,7 +261,7 @@ h2 { color: #55361f; font-weight: 500; }
 }
 
 .result-label strong {
-  font-family: "Bpmf Huninn", "Huninn", sans-serif;
+  font-family: var(--page-font-family);
   writing-mode: vertical-rl;
   font-size: 2.15rem;
   letter-spacing: .16em;
@@ -433,6 +472,8 @@ h2 { color: #55361f; font-weight: 500; }
   .draw-app { padding: 24px 14px 40px; }
   .theme-switcher { display: flex; width: 100%; }
   .theme-button { flex: 1; min-width: 0; }
+  .font-switcher { width: 100%; }
+  .font-mode-button { flex: 1; min-width: 0; }
   .content-actions { grid-template-columns: 1fr; }
   .topbar { align-items: start; flex-direction: column; }
   .stage { min-height: 610px; margin-top: 20px; padding-inline: 8px; }

@@ -10,6 +10,9 @@ const {
   loadCustomThemeSettings,
   saveCustomThemeSettings,
   hasSavedCustomThemeSettings,
+  normalizeFontMode,
+  loadSavedFontMode,
+  saveFontMode,
   cancelTimers,
   getCenterTranslation,
   DRAW_TIMING
@@ -32,6 +35,7 @@ const pageTitle = document.querySelector("#page-title");
 const eyebrow = document.querySelector("#eyebrow");
 const choiceHeading = document.querySelector("#choice-heading");
 const themeButtons = Array.from(document.querySelectorAll("[data-theme]"));
+const fontModeButtons = Array.from(document.querySelectorAll(".font-mode-button"));
 const editItems = document.querySelector("#edit-items");
 const editorPanel = document.querySelector("#editor-panel");
 const editorTitle = document.querySelector("#editor-title");
@@ -62,12 +66,23 @@ soundController.prepare();
 let activeThemeId = "boredom";
 let activeChoices = loadSavedChoices(window.localStorage, activeThemeId);
 let activeCustomSettings = loadCustomThemeSettings(window.localStorage);
+let activeFontMode = loadSavedFontMode(window.localStorage);
 let editorSnapshot = [];
 let customThemeSnapshot = null;
 const drawTimers = [];
 
 function currentTheme() {
   return activeThemeId === "custom" ? buildCustomTheme(activeCustomSettings) : THEMES[activeThemeId];
+}
+
+function renderFontMode(mode) {
+  activeFontMode = normalizeFontMode(mode);
+  document.documentElement.dataset.fontMode = activeFontMode;
+  fontModeButtons.forEach((button) => {
+    const isActive = button.dataset.fontMode === activeFontMode;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 }
 
 function renderChoiceList() {
@@ -102,7 +117,8 @@ function resetDrawState() {
   stage.classList.remove("is-shaking", "is-revealing", "is-unfolding", "has-result");
   resultLabel.setAttribute("aria-hidden", "true");
   drawAgain.hidden = true;
-  hint.hidden = false;
+  hint.classList.remove("is-result-hidden");
+  hint.setAttribute("aria-hidden", "false");
 }
 
 function cancelDrawTimers() {
@@ -362,7 +378,6 @@ function draw() {
   resultText.textContent = choice.text;
   resultBopomofo.textContent = choice.bopomofo;
   resultBopomofo.setAttribute("aria-label", `注音：${choice.bopomofo}`);
-  hint.textContent = "搖一搖，看看哪支籤會跑出來……";
   stage.classList.add("is-shaking");
 
   scheduleDrawStep(() => {
@@ -378,7 +393,8 @@ function draw() {
 
   scheduleDrawStep(() => {
     stage.classList.add("has-result");
-    hint.hidden = true;
+    hint.classList.add("is-result-hidden");
+    hint.setAttribute("aria-hidden", "true");
   }, DRAW_TIMING.shake + DRAW_TIMING.reveal + DRAW_TIMING.unfold);
 
   scheduleDrawStep(() => {
@@ -402,6 +418,17 @@ showList.addEventListener("click", () => {
 
 themeButtons.forEach((button) => {
   button.addEventListener("click", () => setActiveTheme(button.dataset.theme));
+});
+
+fontModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    try {
+      activeFontMode = saveFontMode(window.localStorage, button.dataset.fontMode);
+    } catch {
+      activeFontMode = normalizeFontMode(button.dataset.fontMode);
+    }
+    renderFontMode(activeFontMode);
+  });
 });
 
 editItems.addEventListener("click", () => {
@@ -463,3 +490,4 @@ window.addEventListener("load", reportEmbedHeight);
 
 renderChoiceList();
 renderThemeContent();
+renderFontMode(activeFontMode);

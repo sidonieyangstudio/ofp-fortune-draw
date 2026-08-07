@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-font-mode="bopomofo">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bpmf+Huninn&family=Huninn&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260806-custom-theme">
+  <link rel="stylesheet" href="styles.css?v=20260807-font-toggle-stage">
 </head>
 <body>
   <main class="draw-app" aria-labelledby="page-title">
@@ -16,6 +16,12 @@
       <button class="theme-button" type="button" data-theme="drawing" aria-pressed="false">畫畫</button>
       <button class="theme-button" type="button" data-theme="custom" aria-pressed="false">自選主題</button>
     </nav>
+
+    <div class="font-switcher" role="group" aria-label="選擇文字顯示">
+      <span>文字顯示</span>
+      <button class="font-mode-button is-active" type="button" data-font-mode="bopomofo" aria-pressed="true">有注音</button>
+      <button class="font-mode-button" type="button" data-font-mode="plain" aria-pressed="false">無注音</button>
+    </div>
 
     <header class="topbar">
       <div>
@@ -156,8 +162,8 @@
   <audio id="shake-sound" preload="auto" src="assets/audio/shake.mp3"></audio>
   <audio id="stick-sound" preload="auto" src="assets/audio/stick-whoosh.wav"></audio>
   <audio id="paper-sound" preload="auto" src="assets/audio/paper-chime.wav"></audio>
-  <script src="draw-engine.js?v=20260806-custom-theme"></script>
-  <script src="sound-engine.js?v=20260806-custom-theme"></script>
-  <script src="script.js?v=20260806-custom-theme"></script>
+  <script src="draw-engine.js?v=20260807-font-toggle-stage"></script>
+  <script src="sound-engine.js?v=20260807-font-toggle-stage"></script>
+  <script src="script.js?v=20260807-font-toggle-stage"></script>
 </body>
 </html>
