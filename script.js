@@ -42,6 +42,7 @@ const soundController = createSoundController({
   stick: document.querySelector("#stick-sound"),
   paper: document.querySelector("#paper-sound")
 }, window);
+soundController.prepare();
 
 let activeThemeId = "boredom";
 let activeChoices = loadSavedChoices(window.localStorage, activeThemeId);
