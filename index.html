@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>抽籤筒｜歐的樂星球</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bpmf+Huninn&family=Huninn&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="draw-app" aria-labelledby="page-title">
+    <nav class="theme-switcher" aria-label="選擇抽籤主題">
+      <button class="theme-button is-active" type="button" data-theme="boredom" aria-pressed="true">無聊</button>
+      <button class="theme-button" type="button" data-theme="drawing" aria-pressed="false">畫畫</button>
+    </nav>
+
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="eyebrow">不知道要做什麼的時候</p>
+        <h1 id="page-title">無聊抽籤筒</h1>
+      </div>
+    </header>
+
+    <section class="stage" id="draw-stage" aria-live="polite">
+      <p class="hint" id="hint">點一下籤筒，讓它幫你決定！</p>
+
+      <button class="tube-button" id="draw-button" type="button" aria-label="開始抽籤">
+        <svg class="fortune-scene" viewBox="260 45 620 745" role="img" aria-labelledby="scene-title scene-desc">
+          <title id="scene-title">可搖動的抽籤筒</title>
+          <desc id="scene-desc">由可分開控制的向量籤筒與單支籤組成</desc>
+
+          <g id="fortune-tube">
+            <g class="tube-base">
+              <polygon class="tube-mid" points="351.094,569.935 433.409,700.271 426.51,739.358 344.196,609.022"/>
+              <rect class="tube-dark" x="512.255" y="634.094" transform="matrix(0.1735 -0.9848 0.9848 0.1735 -286.8329 1133.8379)" width="39.691" height="207.429"/>
+              <polygon class="tube-shadow" points="637.692,736.258 759.661,641.909 752.763,680.996 630.793,775.345"/>
+            </g>
+            <g class="tube-body">
+              <polygon class="tube-light" points="493.986,357.045 433.409,700.271 351.094,569.935 411.671,226.709"/>
+              <polygon class="tube-mid" points="820.238,298.682 759.661,641.909 637.692,736.258 698.269,393.032"/>
+              <rect class="tube-main" x="391.573" y="442.937" transform="matrix(0.1738 -0.9848 0.9848 0.1738 -70.8388 1008.8668)" width="348.531" height="207.429"/>
+            </g>
+            <g class="tube-rim">
+              <polygon class="tube-mid" points="501.508,314.423 493.986,357.045 411.671,226.709 419.194,184.087"/>
+              <rect class="tube-dark" x="578.248" y="250.013" transform="matrix(0.1738 -0.9848 0.9848 0.1738 147.2814 883.0062)" width="43.28" height="207.429"/>
+              <polygon class="tube-shadow" points="827.76,256.061 820.238,298.682 698.269,393.032 705.791,350.41"/>
+              <polygon class="tube-light" points="419.208,184.09 541.172,89.728 745.441,125.713 827.746,256.058 705.782,350.42 501.513,314.435"/>
+              <polygon class="tube-opening" points="464.651,192.095 559.482,118.726 718.308,146.705 782.303,248.053 687.472,321.422 528.646,293.444"/>
+              <ellipse class="tube-hole" transform="matrix(0.1728 -0.985 0.985 0.1728 367.4729 911.2653)" cx="726.255" cy="236.859" rx="18.207" ry="21.867"/>
+            </g>
+            <text class="tube-word" x="585" y="480" transform="rotate(10 585 540)">
+              <tspan x="585" y="480">抽</tspan>
+              <tspan x="585" dy="74">籤</tspan>
+            </text>
+          </g>
+
+          <g id="fortune-stick" aria-hidden="true">
+            <g class="stick-art" transform="translate(-256.75 148.237)">
+              <g class="stick-turn">
+                <path class="stick-cap" d="M1014.476,93.959l-19.589,53.769c-2.458,6.746-11.009,9.836-19.13,6.883c-8.122-2.953-12.684-10.812-10.226-17.558l19.589-53.769c-2.458,6.746,2.105,14.604,10.226,17.558C1003.468,103.795,1012.019,100.705,1014.476,93.959z"/>
+                <path class="stick-body" d="M994.888,147.728L823.931,616.986c-2.458,6.746-11.009,9.836-19.13,6.883c-8.121-2.953-12.684-10.812-10.226-17.558l170.956-469.258c-2.458,6.746,2.105,14.604,10.226,17.558C983.879,157.564,992.43,154.474,994.888,147.728z"/>
+                <ellipse class="stick-cap" transform="matrix(0.3405 -0.9403 0.9403 0.3405 576.0866 998.5221)" cx="999.798" cy="88.622" rx="13.006" ry="15.618"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <span class="tap-label">點我抽一支</span>
+      </button>
+
+      <article class="result-label" id="result-label" aria-hidden="true">
+        <span class="result-bopomofo" id="result-bopomofo" aria-label="注音：ㄎㄢˋ ㄕㄨ">ㄎㄢˋ ㄕㄨ</span>
+        <strong id="result-text">看書</strong>
+        <small id="result-message">
+          <span>今天就做</span>
+          <span>這件事吧！</span>
+        </small>
+      </article>
+
+      <button class="draw-again" id="draw-again" type="button" hidden>再抽一次</button>
+    </section>
+
+    <div class="content-actions" aria-label="項目操作">
+      <button class="quiet-button" id="show-list" type="button" aria-expanded="false" aria-controls="choice-panel">看看項目</button>
+      <button class="quiet-button edit-button" id="edit-items" type="button" aria-expanded="false" aria-controls="editor-panel">編輯項目</button>
+    </div>
+
+    <section class="choice-panel" id="choice-panel" hidden>
+      <h2 id="choice-heading">籤筒裡的項目</h2>
+      <ol id="choice-list"></ol>
+    </section>
+
+    <section class="editor-panel" id="editor-panel" hidden>
+      <div class="editor-heading">
+        <div>
+          <p class="eyebrow">自訂這個籤筒</p>
+          <h2 id="editor-title">編輯無聊項目</h2>
+        </div>
+        <span class="item-count" id="item-count">10／20</span>
+      </div>
+      <p class="editor-help">每個主題可以放 2 到 20 個項目，修改後記得按儲存。</p>
+      <p class="editor-message" id="editor-message" role="alert" aria-live="polite"></p>
+      <div class="editor-rows" id="editor-rows"></div>
+      <div class="editor-actions">
+        <button class="quiet-button add-choice" id="add-choice" type="button">增加項目</button>
+        <div class="editor-actions-main">
+          <button class="text-button" id="restore-defaults" type="button">恢復預設</button>
+          <button class="quiet-button" id="cancel-edit" type="button">取消</button>
+          <button class="primary-button" id="save-choices" type="button">儲存</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <audio id="shake-sound" preload="auto" src="assets/audio/shake.mp3"></audio>
+  <audio id="shake-boost-sound" preload="auto" src="assets/audio/shake.mp3"></audio>
+  <audio id="stick-sound" preload="auto" src="assets/audio/stick-whoosh.wav"></audio>
+  <audio id="paper-sound" preload="auto" src="assets/audio/paper-chime.wav"></audio>
+  <script src="draw-engine.js"></script>
+  <script src="sound-engine.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
