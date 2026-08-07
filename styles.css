@@ -38,36 +38,6 @@ button { font: inherit; }
   background: #fff3ee;
 }
 
-.font-switcher {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: fit-content;
-  margin-bottom: 22px;
-  padding: 5px;
-  border: 1px solid #f7dcd1;
-  border-radius: 10px;
-  color: #55361f;
-  background: #fefbf9;
-}
-
-.font-switcher > span { padding: 0 9px; }
-
-.font-mode-button {
-  border: 1px solid transparent;
-  border-radius: 7px;
-  padding: 9px 14px;
-  color: #55361f;
-  background: transparent;
-  cursor: pointer;
-}
-
-.font-mode-button.is-active {
-  border-color: #da844f;
-  color: #fefbf9;
-  background: #da844f;
-}
-
 .theme-button {
   min-width: 96px;
   border: 1px solid transparent;
@@ -86,9 +56,22 @@ button { font: inherit; }
 
 .topbar {
   display: flex;
-  align-items: end;
+  align-items: start;
   justify-content: space-between;
   gap: 20px;
+}
+
+.title-copy { min-width: 0; }
+
+.font-mode-toggle {
+  flex: 0 0 auto;
+  width: 68px;
+  border: 1px solid #c78e78;
+  border-radius: 999px;
+  padding: 7px 8px;
+  color: #55361f;
+  background: #fefbf9;
+  cursor: pointer;
 }
 
 .eyebrow { margin: 0 0 7px; color: #c78e78; letter-spacing: .08em; }
@@ -150,7 +133,7 @@ h2 { color: #55361f; font-weight: 500; }
   padding: 8px 14px;
   border-radius: 6px;
   color: #55361f;
-  background: rgba(254, 251, 249, .92);
+  background: transparent;
 }
 
 .hint.is-result-hidden {
@@ -287,7 +270,7 @@ h2 { color: #55361f; font-weight: 500; }
   left: 12px;
   right: 12px;
   width: auto;
-  text-align: center;
+  text-align: left;
   color: #6c6160;
   opacity: 0;
 }
@@ -472,10 +455,8 @@ h2 { color: #55361f; font-weight: 500; }
   .draw-app { padding: 24px 14px 40px; }
   .theme-switcher { display: flex; width: 100%; }
   .theme-button { flex: 1; min-width: 0; }
-  .font-switcher { width: 100%; }
-  .font-mode-button { flex: 1; min-width: 0; }
   .content-actions { grid-template-columns: 1fr; }
-  .topbar { align-items: start; flex-direction: column; }
+  .topbar { align-items: start; }
   .stage { min-height: 610px; margin-top: 20px; padding-inline: 8px; }
   .tube-button { height: 470px; }
   .result-label { top: 106px; height: 410px; }

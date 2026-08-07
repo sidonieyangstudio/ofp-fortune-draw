@@ -35,7 +35,7 @@ const pageTitle = document.querySelector("#page-title");
 const eyebrow = document.querySelector("#eyebrow");
 const choiceHeading = document.querySelector("#choice-heading");
 const themeButtons = Array.from(document.querySelectorAll("[data-theme]"));
-const fontModeButtons = Array.from(document.querySelectorAll(".font-mode-button"));
+const fontModeToggle = document.querySelector("#font-mode-toggle");
 const editItems = document.querySelector("#edit-items");
 const editorPanel = document.querySelector("#editor-panel");
 const editorTitle = document.querySelector("#editor-title");
@@ -76,13 +76,15 @@ function currentTheme() {
 }
 
 function renderFontMode(mode) {
-  activeFontMode = normalizeFontMode(mode);
-  document.documentElement.dataset.fontMode = activeFontMode;
-  fontModeButtons.forEach((button) => {
-    const isActive = button.dataset.fontMode === activeFontMode;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-  });
+  const normalizedMode = normalizeFontMode(mode);
+  activeFontMode = normalizedMode;
+  document.documentElement.dataset.fontMode = normalizedMode;
+  fontModeToggle.textContent = normalizedMode === "bopomofo" ? "注音" : "無注音";
+  fontModeToggle.setAttribute("aria-pressed", String(normalizedMode === "bopomofo"));
+  fontModeToggle.setAttribute(
+    "aria-label",
+    normalizedMode === "bopomofo" ? "目前有注音，切換成無注音" : "目前無注音，切換成有注音"
+  );
 }
 
 function renderChoiceList() {
@@ -420,15 +422,14 @@ themeButtons.forEach((button) => {
   button.addEventListener("click", () => setActiveTheme(button.dataset.theme));
 });
 
-fontModeButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    try {
-      activeFontMode = saveFontMode(window.localStorage, button.dataset.fontMode);
-    } catch {
-      activeFontMode = normalizeFontMode(button.dataset.fontMode);
-    }
-    renderFontMode(activeFontMode);
-  });
+fontModeToggle.addEventListener("click", () => {
+  const nextFontMode = activeFontMode === "bopomofo" ? "plain" : "bopomofo";
+  try {
+    activeFontMode = saveFontMode(window.localStorage, nextFontMode);
+  } catch {
+    activeFontMode = normalizeFontMode(nextFontMode);
+  }
+  renderFontMode(activeFontMode);
 });
 
 editItems.addEventListener("click", () => {
