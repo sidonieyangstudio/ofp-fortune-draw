@@ -25,6 +25,21 @@
     { text: "相機", bopomofo: "ㄒㄧㄤˋ ㄐㄧ" }
   ];
 
+  const JIAO4_VARIATION_SELECTOR = "\u{E01E1}";
+  const JIAO4_PHRASES = Object.freeze([
+    "來睡覺去",
+    "去睡覺",
+    "舒服的睡一覺",
+    "睡個午覺",
+    "睡午覺"
+  ]);
+
+  function formatBopomofoText(text) {
+    return JIAO4_PHRASES.includes(text)
+      ? text.replaceAll("覺", `覺${JIAO4_VARIATION_SELECTOR}`)
+      : text;
+  }
+
   const CUSTOM_THEME_STORAGE_KEY = "ofp-draw-theme-custom";
   const FONT_MODE_STORAGE_KEY = "ofp-draw-font-mode";
   const FONT_MODE_DEFAULT = "bopomofo";
@@ -251,6 +266,7 @@
     normalizeFontMode,
     loadSavedFontMode,
     saveFontMode,
+    formatBopomofoText,
     validateCustomThemeSettings,
     buildCustomTheme,
     loadCustomThemeSettings,

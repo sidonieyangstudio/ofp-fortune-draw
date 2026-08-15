@@ -13,6 +13,7 @@ const {
   normalizeFontMode,
   loadSavedFontMode,
   saveFontMode,
+  formatBopomofoText,
   cancelTimers,
   getCenterTranslation,
   DRAW_TIMING
@@ -91,7 +92,7 @@ function renderChoiceList() {
   list.replaceChildren();
   activeChoices.forEach((choiceText) => {
     const item = document.createElement("li");
-    item.textContent = choiceText;
+    item.textContent = formatBopomofoText(choiceText);
     list.append(item);
   });
   choiceHeading.textContent = `籤筒裡的 ${activeChoices.length} 個項目`;
@@ -377,7 +378,7 @@ function draw() {
   resetDrawState();
   positionStickAnimation();
   const choice = pickFromChoices(activeChoices);
-  resultText.textContent = choice.text;
+  resultText.textContent = formatBopomofoText(choice.text);
   resultBopomofo.textContent = choice.bopomofo;
   resultBopomofo.setAttribute("aria-label", `注音：${choice.bopomofo}`);
   stage.classList.add("is-shaking");
