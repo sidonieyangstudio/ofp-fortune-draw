@@ -25,7 +25,7 @@
     { text: "相機", bopomofo: "ㄒㄧㄤˋ ㄐㄧ" }
   ];
 
-  const JIAO4_VARIATION_SELECTOR = "\u{E01E1}";
+  const SECOND_READING_VARIATION_SELECTOR = "\u{E01E1}";
   const JIAO4_PHRASES = Object.freeze([
     "來睡覺去",
     "去睡覺",
@@ -35,9 +35,12 @@
   ]);
 
   function formatBopomofoText(text) {
-    return JIAO4_PHRASES.includes(text)
-      ? text.replaceAll("覺", `覺${JIAO4_VARIATION_SELECTOR}`)
+    const withJiao4 = JIAO4_PHRASES.includes(text)
+      ? text.replaceAll("覺", `覺${SECOND_READING_VARIATION_SELECTOR}`)
       : text;
+    return text === "睡個午覺"
+      ? withJiao4.replace("個", `個${SECOND_READING_VARIATION_SELECTOR}`)
+      : withJiao4;
   }
 
   const CUSTOM_THEME_STORAGE_KEY = "ofp-draw-theme-custom";
