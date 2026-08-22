@@ -23,7 +23,6 @@ button { font: inherit; }
 
 .draw-app {
   width: min(920px, 100%);
-  min-height: 100vh;
   margin: 0 auto;
   padding: 36px 24px 56px;
 }

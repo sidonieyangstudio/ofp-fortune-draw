@@ -196,6 +196,7 @@ function closeEditor() {
   editItems.setAttribute("aria-expanded", "false");
   editItems.textContent = "編輯項目";
   showEditorMessage("");
+  reportEmbedHeight();
 }
 
 function openEditor() {
@@ -244,6 +245,7 @@ function closeCustomThemeEditor() {
   editTheme.setAttribute("aria-expanded", "false");
   editTheme.textContent = "設定主題";
   showCustomThemeMessage("");
+  reportEmbedHeight();
 }
 
 function openCustomThemeEditor() {
@@ -419,6 +421,7 @@ showList.addEventListener("click", () => {
   panel.hidden = !isOpening;
   showList.setAttribute("aria-expanded", String(isOpening));
   showList.textContent = isOpening ? "收起項目" : "看看項目";
+  reportEmbedHeight();
 });
 
 themeButtons.forEach((button) => {
@@ -480,14 +483,18 @@ window.addEventListener("beforeunload", (event) => {
 function reportEmbedHeight() {
   if (window.parent === window) return;
 
+  const appElement = document.querySelector(".draw-app") || document.body;
+  const targetHeight = appElement ? Math.ceil(appElement.getBoundingClientRect().height) : Math.ceil(document.body.offsetHeight);
+
   window.parent.postMessage({
     type: "ofp-fortune-resize",
-    height: Math.ceil(document.documentElement.scrollHeight)
+    height: targetHeight
   }, "*");
 }
 
 if ("ResizeObserver" in window) {
-  new ResizeObserver(reportEmbedHeight).observe(document.body);
+  const appElement = document.querySelector(".draw-app") || document.body;
+  new ResizeObserver(reportEmbedHeight).observe(appElement);
 }
 
 window.addEventListener("load", reportEmbedHeight);
