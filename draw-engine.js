@@ -1,15 +1,15 @@
 (function createDrawEngine(globalScope) {
   const choices = [
-    { text: "睡飽飽", bopomofo: "ㄕㄨㄟˋ ㄅㄠˇ ㄅㄠˇ" },
-    { text: "來睡覺去", bopomofo: "ㄌㄞˊ ㄕㄨㄟˋ ㄐㄧㄠˋ ㄑㄩˋ" },
-    { text: "去睡覺", bopomofo: "ㄑㄩˋ ㄕㄨㄟˋ ㄐㄧㄠˋ" },
-    { text: "補眠一下", bopomofo: "ㄅㄨˇ ㄇㄧㄢˊ ㄧˊ ㄒㄧㄚˋ" },
-    { text: "洗洗睡", bopomofo: "ㄒㄧˇ ㄒㄧˇ ㄕㄨㄟˋ" },
-    { text: "舒服的睡一覺", bopomofo: "ㄕㄨ ㄈㄨˊ ㄉㄜ˙ ㄕㄨㄟˋ ㄧˊ ㄐㄧㄠˋ" },
-    { text: "睡個午覺", bopomofo: "ㄕㄨㄟˋ ˙ㄍㄜ ㄨˇ ㄐㄧㄠˋ" },
-    { text: "睡午覺", bopomofo: "ㄕㄨㄟˋ ㄨˇ ㄐㄧㄠˋ" },
-    { text: "小睡三小時", bopomofo: "ㄒㄧㄠˇ ㄕㄨㄟˋ ㄙㄢ ㄒㄧㄠˇ ㄕˊ" },
-    { text: "小睡一下", bopomofo: "ㄒㄧㄠˇ ㄕㄨㄟˋ ㄧˊ ㄒㄧㄚˋ" }
+    { text: "拼拼圖五分鐘", bopomofo: "ㄆㄧㄣ ㄆㄧㄣ ㄊㄨˊ ㄨˇ ㄈㄣ ㄓㄨㄥ" },
+    { text: "泡澡放鬆", bopomofo: "ㄆㄠˋ ㄗㄠˇ ㄈㄤˋ ㄙㄨㄥ" },
+    { text: "畫畫喜歡的動物", bopomofo: "ㄏㄨㄚˋ ㄏㄨㄚˋ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄉㄨㄥˋ ㄨˋ" },
+    { text: "看一本書", bopomofo: "ㄎㄢˋ ㄧˋ ㄅㄣˇ ㄕㄨ" },
+    { text: "聽喜歡的音樂", bopomofo: "ㄊㄧㄥ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄧㄣ ㄩㄝˋ" },
+    { text: "玩最愛的玩具", bopomofo: "ㄨㄢˊ ㄗㄨㄟˋ ㄞˋ ㄉㄜ˙ ㄨㄢˊ ㄐㄩˋ" },
+    { text: "唱一首喜歡的歌", bopomofo: "ㄔㄤˋ ㄧˋ ㄕㄡˇ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄍㄜ" },
+    { text: "蓋一座小小的積木城堡", bopomofo: "ㄍㄞˋ ㄧˊ ㄗㄨㄛˋ ㄒㄧㄠˇ ㄒㄧㄠˇ ㄉㄜ˙ ㄐㄧ ㄇㄨˋ ㄔㄥˊ ㄅㄠˇ" },
+    { text: "幫玩具找一個家", bopomofo: "ㄅㄤ ㄨㄢˊ ㄐㄩˋ ㄓㄠˇ ㄧˊ ㄍㄜ˙ ㄐㄧㄚ" },
+    { text: "找三個喜歡的顏色畫下來", bopomofo: "ㄓㄠˇ ㄙㄢ ㄍㄜ˙ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄧㄢˊ ㄙㄜˋ ㄏㄨㄚˋ ㄒㄧㄚˋ ㄌㄞˊ" }
   ];
 
   const drawingChoices = [
