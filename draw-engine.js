@@ -2,15 +2,16 @@
   const choices = [
     { text: "拼拼圖五分鐘", bopomofo: "ㄆㄧㄣ ㄆㄧㄣ ㄊㄨˊ ㄨˇ ㄈㄣ ㄓㄨㄥ" },
     { text: "泡澡放鬆", bopomofo: "ㄆㄠˋ ㄗㄠˇ ㄈㄤˋ ㄙㄨㄥ" },
-    { text: "畫畫喜歡的動物", bopomofo: "ㄏㄨㄚˋ ㄏㄨㄚˋ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄉㄨㄥˋ ㄨˋ" },
+    { text: "畫喜歡的動物", bopomofo: "ㄏㄨㄚˋ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄉㄨㄥˋ ㄨˋ" },
     { text: "看一本書", bopomofo: "ㄎㄢˋ ㄧˋ ㄅㄣˇ ㄕㄨ" },
     { text: "聽喜歡的音樂", bopomofo: "ㄊㄧㄥ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄧㄣ ㄩㄝˋ" },
     { text: "玩最愛的玩具", bopomofo: "ㄨㄢˊ ㄗㄨㄟˋ ㄞˋ ㄉㄜ˙ ㄨㄢˊ ㄐㄩˋ" },
     { text: "唱一首喜歡的歌", bopomofo: "ㄔㄤˋ ㄧˋ ㄕㄡˇ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄍㄜ" },
-    { text: "蓋一座小小的積木城堡", bopomofo: "ㄍㄞˋ ㄧˊ ㄗㄨㄛˋ ㄒㄧㄠˇ ㄒㄧㄠˇ ㄉㄜ˙ ㄐㄧ ㄇㄨˋ ㄔㄥˊ ㄅㄠˇ" },
+    { text: "蓋一座積木城堡", bopomofo: "ㄍㄞˋ ㄧˊ ㄗㄨㄛˋ ㄐㄧ ㄇㄨˋ ㄔㄥˊ ㄅㄠˇ" },
     { text: "幫玩具找一個家", bopomofo: "ㄅㄤ ㄨㄢˊ ㄐㄩˋ ㄓㄠˇ ㄧˊ ㄍㄜ˙ ㄐㄧㄚ" },
-    { text: "找三個喜歡的顏色畫下來", bopomofo: "ㄓㄠˇ ㄙㄢ ㄍㄜ˙ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄧㄢˊ ㄙㄜˋ ㄏㄨㄚˋ ㄒㄧㄚˋ ㄌㄞˊ" }
+    { text: "畫三個喜歡的顏色", bopomofo: "ㄏㄨㄚˋ ㄙㄢ ㄍㄜ˙ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄧㄢˊ ㄙㄜˋ" }
   ];
+  const MAX_CHOICE_LENGTH = 10;
 
   const drawingChoices = [
     { text: "杯子蛋糕", bopomofo: "ㄅㄟ ㄗ˙ ㄉㄢˋ ㄍㄠ" },
@@ -110,6 +111,9 @@
     }
     if (cleaned.some((value) => !value)) {
       return { ok: false, values: cleaned, message: "項目不能留白。" };
+    }
+    if (cleaned.some((value) => value.length > MAX_CHOICE_LENGTH)) {
+      return { ok: false, values: cleaned, message: `每個項目最多只能有 ${MAX_CHOICE_LENGTH} 個字。` };
     }
     if (new Set(cleaned).size !== cleaned.length) {
       return { ok: false, values: cleaned, message: "項目不能重複。" };
@@ -263,6 +267,7 @@
     getCenterTranslation,
     DRAW_TIMING,
     THEMES,
+    MAX_CHOICE_LENGTH,
     validateChoiceTexts,
     CUSTOM_THEME_DEFAULTS,
     FONT_MODE_DEFAULT,

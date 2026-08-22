@@ -246,7 +246,7 @@ h2 { color: #55361f; font-weight: 500; }
 .result-label strong {
   font-family: var(--page-font-family);
   writing-mode: vertical-rl;
-  font-size: 2.15rem;
+  font-size: var(--result-font-size, 2.15rem);
   letter-spacing: .16em;
   font-weight: 500;
   opacity: 0;

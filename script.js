@@ -163,7 +163,7 @@ function renderEditorRows(values) {
     input.className = "editor-input";
     input.type = "text";
     input.value = value;
-    input.maxLength = 40;
+    input.maxLength = 10;
     input.setAttribute("aria-label", `第 ${index + 1} 個項目`);
 
     const remove = document.createElement("button");
@@ -378,6 +378,8 @@ function draw() {
   resetDrawState();
   positionStickAnimation();
   const choice = pickFromChoices(activeChoices);
+  const resultFontSize = Math.max(1.65, 2.15 - Math.max(0, choice.text.length - 6) * 0.1);
+  resultLabel.style.setProperty("--result-font-size", `${resultFontSize}rem`);
   resultText.textContent = formatBopomofoText(choice.text);
   resultBopomofo.textContent = choice.bopomofo;
   resultBopomofo.setAttribute("aria-label", `注音：${choice.bopomofo}`);
