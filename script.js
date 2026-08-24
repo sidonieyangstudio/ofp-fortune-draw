@@ -29,6 +29,7 @@ const resultText = document.querySelector("#result-text");
 const resultBopomofo = document.querySelector("#result-bopomofo");
 const resultMessage = document.querySelector("#result-message");
 const hint = document.querySelector("#hint");
+const tapLabel = document.querySelector(".tap-label");
 const showList = document.querySelector("#show-list");
 const panel = document.querySelector("#choice-panel");
 const list = document.querySelector("#choice-list");
@@ -112,7 +113,7 @@ function renderThemeContent() {
   const theme = currentTheme();
   pageTitle.textContent = theme.title;
   eyebrow.textContent = theme.eyebrow;
-  hint.textContent = theme.hint;
+  hint.textContent = formatBopomofoText(theme.hint);
   renderResultMessage(theme);
   document.title = `${theme.title}｜歐的樂星球`;
 }
@@ -509,3 +510,4 @@ window.addEventListener("load", reportEmbedHeight);
 renderChoiceList();
 renderThemeContent();
 renderFontMode(activeFontMode);
+tapLabel.textContent = formatBopomofoText(tapLabel.textContent);

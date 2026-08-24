@@ -28,6 +28,7 @@
   ];
 
   const SECOND_READING_VARIATION_SELECTOR = "\u{E01E1}";
+  const FOURTH_READING_VARIATION_SELECTOR = "\u{E01E2}";
   const JIAO4_PHRASES = Object.freeze([
     "來睡覺去",
     "去睡覺",
@@ -37,9 +38,13 @@
   ]);
 
   function formatBopomofoText(text) {
+    const withToneChanges = text
+      .replace(/一(?=[支本首])/gu, `一${FOURTH_READING_VARIATION_SELECTOR}`)
+      .replace(/一(?=[下座個])/gu, `一${SECOND_READING_VARIATION_SELECTOR}`)
+      .replace(new RegExp(`子(?!${SECOND_READING_VARIATION_SELECTOR})`, "gu"), `子${SECOND_READING_VARIATION_SELECTOR}`);
     const withJiao4 = JIAO4_PHRASES.includes(text)
-      ? text.replaceAll("覺", `覺${SECOND_READING_VARIATION_SELECTOR}`)
-      : text;
+      ? withToneChanges.replaceAll("覺", `覺${SECOND_READING_VARIATION_SELECTOR}`)
+      : withToneChanges;
     return text === "睡個午覺"
       ? withJiao4.replace("個", `個${SECOND_READING_VARIATION_SELECTOR}`)
       : withJiao4;
