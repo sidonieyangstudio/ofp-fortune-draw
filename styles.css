@@ -242,11 +242,20 @@ h2 { color: #55361f; font-weight: 500; }
   opacity: 0;
 }
 
-.result-label strong {
+.result-copy-lines {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: 1.55rem;
+  max-width: 100%;
+}
+
+.result-copy-lines span {
   font-family: var(--page-font-family);
   writing-mode: vertical-rl;
   font-size: var(--result-font-size, 2.15rem);
-  letter-spacing: .16em;
+  line-height: 1.45;
+  letter-spacing: .1em;
   font-weight: 500;
   opacity: 0;
 }
@@ -292,7 +301,7 @@ h2 { color: #55361f; font-weight: 500; }
 
 .stage.is-unfolding .result-label { animation: unfold-result-card .5s cubic-bezier(.2, .78, .2, 1) forwards; }
 
-.stage.has-result .result-label strong,
+.stage.has-result .result-copy-lines span,
 .stage.has-result .result-label small,
 .stage.has-result .result-label::before { animation: reveal-result-copy .25s ease-out forwards; }
 
@@ -482,7 +491,7 @@ h2 { color: #55361f; font-weight: 500; }
   .stage.is-revealing .stick-turn,
   .stage.is-unfolding #fortune-stick,
   .stage.is-unfolding .result-label,
-  .stage.has-result .result-label strong,
+  .stage.has-result .result-copy-lines span,
   .stage.has-result .result-label small,
   .stage.has-result .result-label::before { animation-duration: .01ms; }
 }

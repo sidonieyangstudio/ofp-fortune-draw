@@ -11,7 +11,8 @@
     { text: "幫玩具找一個家", bopomofo: "ㄅㄤ ㄨㄢˊ ㄐㄩˋ ㄓㄠˇ ㄧˊ ㄍㄜ˙ ㄐㄧㄚ" },
     { text: "畫三個喜歡的顏色", bopomofo: "ㄏㄨㄚˋ ㄙㄢ ㄍㄜ˙ ㄒㄧˇ ㄏㄨㄢ ㄉㄜ˙ ㄧㄢˊ ㄙㄜˋ" }
   ];
-  const MAX_CHOICE_LENGTH = 10;
+  const RESULT_LINE_LENGTH = 8;
+  const MAX_CHOICE_LENGTH = RESULT_LINE_LENGTH * 2;
 
   const drawingChoices = [
     { text: "杯子蛋糕", bopomofo: "ㄅㄟ ㄗ˙ ㄉㄢˋ ㄍㄠ" },
@@ -42,6 +43,15 @@
     return text === "睡個午覺"
       ? withJiao4.replace("個", `個${SECOND_READING_VARIATION_SELECTOR}`)
       : withJiao4;
+  }
+
+  function splitResultText(text) {
+    if (typeof text !== "string" || text.length > MAX_CHOICE_LENGTH) return null;
+    const lines = [];
+    for (let index = 0; index < text.length; index += RESULT_LINE_LENGTH) {
+      lines.push(text.slice(index, index + RESULT_LINE_LENGTH));
+    }
+    return lines;
   }
 
   const CUSTOM_THEME_STORAGE_KEY = "ofp-draw-theme-custom";
@@ -268,6 +278,8 @@
     DRAW_TIMING,
     THEMES,
     MAX_CHOICE_LENGTH,
+    RESULT_LINE_LENGTH,
+    splitResultText,
     validateChoiceTexts,
     CUSTOM_THEME_DEFAULTS,
     FONT_MODE_DEFAULT,

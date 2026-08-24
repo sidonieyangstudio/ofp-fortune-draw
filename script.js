@@ -14,6 +14,7 @@ const {
   loadSavedFontMode,
   saveFontMode,
   formatBopomofoText,
+  splitResultText,
   cancelTimers,
   getCenterTranslation,
   DRAW_TIMING
@@ -163,7 +164,7 @@ function renderEditorRows(values) {
     input.className = "editor-input";
     input.type = "text";
     input.value = value;
-    input.maxLength = 10;
+    input.maxLength = 16;
     input.setAttribute("aria-label", `第 ${index + 1} 個項目`);
 
     const remove = document.createElement("button");
@@ -380,9 +381,15 @@ function draw() {
   resetDrawState();
   positionStickAnimation();
   const choice = pickFromChoices(activeChoices);
-  const resultFontSize = Math.max(1.65, 2.15 - Math.max(0, choice.text.length - 6) * 0.1);
+  const resultLines = splitResultText(choice.text) || [choice.text];
+  const longestLineLength = Math.max(...resultLines.map((line) => line.length));
+  const resultFontSize = Math.max(1.7, 2.05 - Math.max(0, longestLineLength - 6) * 0.1);
   resultLabel.style.setProperty("--result-font-size", `${resultFontSize}rem`);
-  resultText.textContent = formatBopomofoText(choice.text);
+  resultText.replaceChildren(...resultLines.map((line) => {
+    const lineElement = document.createElement("span");
+    lineElement.textContent = formatBopomofoText(line);
+    return lineElement;
+  }));
   resultBopomofo.textContent = choice.bopomofo;
   resultBopomofo.setAttribute("aria-label", `注音：${choice.bopomofo}`);
   stage.classList.add("is-shaking");
