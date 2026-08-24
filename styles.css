@@ -262,6 +262,8 @@ h2 { color: #55361f; font-weight: 500; }
   opacity: 0;
 }
 
+.result-copy-lines span:first-child { transform: translateX(-.55rem); }
+
 .result-bopomofo {
   position: absolute;
   width: 1px;
