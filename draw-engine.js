@@ -76,7 +76,7 @@
   const THEMES = Object.freeze({
     boredom: Object.freeze({
       id: "boredom",
-      title: "無聊抽籤筒",
+      title: "不無聊抽籤筒",
       eyebrow: "不知道要做什麼的時候",
       hint: "點一下籤筒，讓它幫你決定！",
       resultMessage: Object.freeze(["今天就做", "這件事吧！"]),
